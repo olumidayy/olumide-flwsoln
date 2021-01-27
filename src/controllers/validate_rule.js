@@ -25,7 +25,7 @@ exports.validate = (req, res) => {
   are all present in the rule object */
   var ruleFields = ["field", "condition", "condition_value"];
   for (var f of ruleFields) {
-    if (rule[f] == null) {
+    if (rule[f] == null || rule[f] == '') {
       return sendErrorMessage(res, `rule.${f} of the rule is required.`, null);
     }
   }
@@ -39,29 +39,32 @@ exports.validate = (req, res) => {
     return sendErrorMessage(res, "rule.condition should be a string.", null);
 
   var message;
-  let { isValid, value } = utils.checkCondition(res, rule, data);
-  if (isValid) {
-    message = `field ${field} successfully validated.`;
-    data = {
-      validation: {
-        error: false,
-        field: field,
-        field_value: value,
-        condition: condition,
-        condition_value: condition_value,
-      },
-    };
-    return sendSuccessMessage(res, message, data);
-  }
-  message = `field ${field} failed validation.`;
-  data = {
-    validation: {
-      error: true,
-      field: field,
-      field_value: value,
-      condition: condition,
-      condition_value: condition_value,
-    },
-  };
-  return sendErrorMessage(res, message, data);
+  try {
+    let { isValid, value } = utils.checkCondition(res, rule, data);
+    if (isValid) {
+        message = `field ${field} successfully validated.`;
+        data = {
+          validation: {
+            error: false,
+            field: field,
+            field_value: value,
+            condition: condition,
+            condition_value: condition_value,
+          },
+        };
+        return sendSuccessMessage(res, message, data);
+      }
+      message = `field ${field} failed validation.`;
+      data = {
+        validation: {
+          error: true,
+          field: field,
+          field_value: value,
+          condition: condition,
+          condition_value: condition_value,
+        },
+      };
+      return sendErrorMessage(res, message, data);
+  } catch (error) { }
 };
+

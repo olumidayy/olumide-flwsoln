@@ -9,7 +9,7 @@ const utils = require('./utils/utils');
 var app = express();
 
 const configureApp = (app) => {
-    app.use(cors());
+    // app.use(cors());
     app.use(bodyParser.json());
     app.use(utils.checkBody);
     

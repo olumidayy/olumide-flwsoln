@@ -7,9 +7,10 @@ exports.sendSuccessMessage = (res, message, data) => {
     });
 }
 
-exports.sendErrorMessage = (res, code, message) => {
-    res.status(code).json({
+exports.sendErrorMessage = (res, message, data) => {
+    res.status(400).json({
         status: 'error',
         message: message,
+        data: data
     });
 }

@@ -2,7 +2,7 @@
 exports.sendSuccessMessage = (res, message, data) => {
     return res.status(200).json({
         status: 'success',
-        message: message,
+        message: formatStr(message),
         data: data
     });
 }
@@ -10,8 +10,14 @@ exports.sendSuccessMessage = (res, message, data) => {
 exports.sendErrorMessage = (res, message, data) => {
     res.status(400).json({
         status: 'error',
-        message: message,
+        message: formatStr(message),
         data: data
     });
 }
 
+function formatStr(str) {
+    if(str[str.length-1] != '.'){
+        str += '.';
+    }
+    return str;
+}

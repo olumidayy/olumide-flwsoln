@@ -4,8 +4,6 @@ const utils = require("../utils/utils");
 exports.validate = (req, res) => {
   let { rule, data } = req.body;
 
-  console.log(rule, data);
-
   /* The next two lines make sure that the properties 'rule' and 'data' 
     are present.*/
   if (rule == null) return sendErrorMessage(res, "rule is required.", null);
@@ -33,6 +31,7 @@ exports.validate = (req, res) => {
   }
 
   const { field, condition, condition_value } = rule;
+
   if (typeof field != "string")
     return sendErrorMessage(res, "rule.field should be a string.", null);
 

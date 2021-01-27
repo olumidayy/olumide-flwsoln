@@ -7,7 +7,7 @@ const ld = require('lodash');
     is [body-parser] in this case and sends the
     appropriate error to the client. */
 exports.checkBody = (err, req, res, next) => {
-    console.error(err.stack);
+    // console.error(err.stack);
     message = 'Invalid JSON payload passed.';
     return sendErrorMessage(res, message, null);
 }
@@ -28,13 +28,11 @@ exports.checkCondition = (res, rule, data) => {
     else {
         //to separate nested fields
         let nests = field.split('.');
-        console.log(nests);
 
         //The try block catches an error when a field is not present
         try {
             for(var i of nests) {
                 value = value[i];
-                console.log(value);
                 if(!value) throw Error('Value is undefined.')
             }
         } catch (error) {
@@ -44,10 +42,12 @@ exports.checkCondition = (res, rule, data) => {
     }
 
     //This checks if the field and the condition value are of the same type
-    if(typeof value !== typeof condition_value){
-        let type = typeof condition_value;
-        message = `${field == '' ? 'data': field} should be ${'aeiou'.includes(type[0]) ? 'an' : 'a'} ${type}.`;
-        return sendErrorMessage(res, message, null);
+    let checkTypes = () => {
+        if(typeof value !== typeof condition_value){
+            let type = typeof condition_value;
+            message = `${field == '' ? 'data': field} should be ${'aeiou'.includes(type[0]) ? 'an' : 'a'} ${type}.`;
+            return sendErrorMessage(res, message, null);
+        }
     }
     var isValid;
     switch (condition) {
@@ -68,7 +68,7 @@ exports.checkCondition = (res, rule, data) => {
             break;
         
         case 'contains':
-            isValid = value.includes(condition_value);
+            isValid = ld.includes(value, condition_value);
             break;
     
         default:

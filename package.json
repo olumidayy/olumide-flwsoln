@@ -1,0 +1,25 @@
+{
+  "name": "olumide-flwsoln",
+  "version": "1.0.0",
+  "description": "Solution to Flutterwave task.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/olumidayy/olumide-flwsoln.git"
+  },
+  "author": "Olumide Nwosu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/olumidayy/olumide-flwsoln/issues"
+  },
+  "homepage": "https://github.com/olumidayy/olumide-flwsoln#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "i": "^0.3.6"
+  }
+}

@@ -18,24 +18,35 @@ exports.checkCondition = (res, rule, data) => {
     var message;
     const { field, condition, condition_value } = rule;
 
-    //to separate nested fields
-    let nests = field.split('.');
+    //if the field property is empty
+    if(field.trim() == '') {
+        /* What this implies is that if the field property of the
+           rule object is an empty string, the comparison is done
+           between the condition_value and the data field value
+           directly. */
+    }
+    else {
+        //to separate nested fields
+        let nests = field.split('.');
+        console.log(nests);
 
-    //The try block catches an error when a field is not present
-    try {
-        for(var i of nests) {
-            value = value[i];
-            console.log(value);
+        //The try block catches an error when a field is not present
+        try {
+            for(var i of nests) {
+                value = value[i];
+                console.log(value);
+                if(!value) throw Error('Value is undefined.')
+            }
+        } catch (error) {
+            message = `field ${field} is missing from data.`
+            return sendErrorMessage(res, message, null);
         }
-    } catch (error) {
-        message = `field ${field} is missing from data.`
-        return sendErrorMessage(res, message, null);
     }
 
     //This checks if the field and the condition value are of the same type
     if(typeof value !== typeof condition_value){
         let type = typeof condition_value;
-        message = `${field} should be ${'aeiou'.includes(type[0]) ? 'an' : 'a'} ${type}.`;
+        message = `${field == '' ? 'data': field} should be ${'aeiou'.includes(type[0]) ? 'an' : 'a'} ${type}.`;
         return sendErrorMessage(res, message, null);
     }
     var isValid;

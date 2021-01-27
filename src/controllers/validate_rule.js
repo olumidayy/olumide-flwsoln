@@ -11,28 +11,36 @@ exports.validate = (req, res) => {
   if (rule == null) return sendErrorMessage(res, "rule is required.", null);
   if (data == null) return sendErrorMessage(res, "data is required.", null);
 
-  /* This line makes sure that 'rule' and 'data' are valid objects */
+  /* This line makes sure that 'rule' is a valid object */
   if (typeof rule != "object")
     return sendErrorMessage(res, "rule should be an object.", null);
-  if (typeof data != "object") {
-    return sendErrorMessage(res, "data should be an object.", null);
+
+  if (!["object", "string"].includes(typeof data)) {
+    return sendErrorMessage(
+      res,
+      "data should either be an object, array or a string.",
+      null
+    );
   }
 
   /* Checks to make sure that the 'field', 'condition' and 'condition_value' 
   are all present in the rule object */
-  ["field", "condition", "condition_value"].forEach((field) => {
-    if (!rule[field]) {
-      return sendErrorMessage(
-        res,
-        `field '${field}' of the rule object is required.`,
-        null
-      );
+  var ruleFields = ["field", "condition", "condition_value"];
+  for (var f of ruleFields) {
+    if (rule[f] == null) {
+      return sendErrorMessage(res, `rule.${f} of the rule is required.`, null);
     }
-  });
+  }
+
+  const { field, condition, condition_value } = rule;
+  if (typeof field != "string")
+    return sendErrorMessage(res, "rule.field should be a string.", null);
+
+  if (typeof condition != "string")
+    return sendErrorMessage(res, "rule.condition should be a string.", null);
 
   var message;
   let { isValid, value } = utils.checkCondition(res, rule, data);
-  const { field, condition, condition_value } = rule;
   if (isValid) {
     message = `field ${field} successfully validated.`;
     data = {
